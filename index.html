@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>todo</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Poppins", sans-serif;
+                user-select: none;
+                color: white;
+            }
+
+            .selected {
+                border-bottom: 2px solid #7367f0;
+                color: #7367f0;
+            }
+
+            .filter {
+                cursor: pointer;
+            }
+
+            .done .content {
+                text-decoration: line-through;
+                color: gray;
+            }
+
+            ::-webkit-scrollbar {
+                width: 0%;
+            }
+        </style>
+    </head>
+    <body
+        style="
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        "
+    >
+        <div
+            class="container"
+            style="
+                width: 306px;
+                aspect-ratio: 18/39;
+                border: 2px solid black;
+                border-radius: 20px;
+                padding: 20px;
+                background-color: #222222;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            "
+        >
+            <div
+                class="information"
+                style="
+                    width: 266px;
+                    height: 120px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                "
+            >
+                <div
+                    id="month"
+                    style="height: 20px; font-size: 16px; font-weight: 600"
+                >
+                    AUG
+                </div>
+                <div
+                    id="day"
+                    style="
+                        height: 40px;
+                        font-size: 32px;
+                        font-weight: 600;
+                        display: flex;
+                        align-items: center;
+                    "
+                >
+                    22
+                </div>
+                <div
+                    id="progressBar"
+                    style="
+                        width: 100%;
+                        height: 30px;
+                        margin-top: 30px;
+                        border-radius: 15px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 16px;
+                        font-weight: 500;
+                        position: relative;
+                    "
+                >
+                    <div
+                        id="percent"
+                        style="
+                            width: 100%;
+                            height: 100%;
+                            position: absolute;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 1;
+                        "
+                    >
+                        50%
+                    </div>
+                    <div
+                        id="progressColor"
+                        style="
+                            position: absolute;
+                            width: 50%;
+                            height: 100%;
+                            background: linear-gradient(
+                                to bottom right,
+                                #5d69be,
+                                #7367f0
+                            );
+                            left: 0px;
+                            border-radius: 15px;
+                        "
+                    ></div>
+                </div>
+            </div>
+            <div
+                class="filters"
+                style="
+                    width: 266px;
+                    height: 26px;
+                    display: flex;
+                    justify-content: space-evenly;
+                    margin-top: 20px;
+                "
+            >
+                <div
+                    class="filter selected"
+                    id="filter_all"
+                    onclick="filter('filter_all')"
+                >
+                    All
+                </div>
+                <div
+                    class="filter"
+                    id="filter_done"
+                    onclick="filter('filter_done')"
+                >
+                    Done
+                </div>
+                <div
+                    class="filter"
+                    id="filter_undone"
+                    onclick="filter('filter_undone')"
+                >
+                    Undone
+                </div>
+            </div>
+            <div
+                id="tasks"
+                style="
+                    width: 266px;
+                    height: 368px;
+                    margin-top: 20px;
+                    overflow: auto;
+                "
+            ></div>
+            <div
+                class="add"
+                style="
+                    width: 266px;
+                    height: 46px;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 20px;
+                "
+            >
+                <input
+                    type="text"
+                    id="taskText"
+                    placeholder="Input Your Task..."
+                    style="
+                        color: #222222;
+                        width: 200px;
+                        height: 46px;
+                        border-radius: 23px;
+                        padding-right: 16px;
+                        padding-left: 16px;
+                    "
+                    onkeydown="enter(event)"
+                />
+                <div
+                    id="taskBtn"
+                    style="
+                        width: 66px;
+                        height: 46px;
+                        display: flex;
+                        justify-content: right;
+                        align-items: center;
+                        cursor: pointer;
+                    "
+                    onclick="submitTask()"
+                >
+                    <div
+                        class="material-symbols-outlined"
+                        style="
+                            width: 40px;
+                            height: 40px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 20px;
+                            font-size: 26px;
+                            background: linear-gradient(
+                                to bottom right,
+                                #5d69be,
+                                #7367f0
+                            );
+                        "
+                    >
+                        add
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var n = 0;
+
+            function progress() {
+                var elementsWithTask = document.querySelectorAll(".task");
+                var numberOfTask = elementsWithTask.length;
+                var elementsWithDone = document.querySelectorAll(".done");
+                var numberOfDone = elementsWithDone.length;
+                var percent = document.getElementById("percent");
+                var progressColor = document.getElementById("progressColor");
+                if (isNaN(numberOfDone / numberOfDone)) {
+                    percent.innerText = 0;
+                    progressColor.style.width = 0 + "%";
+                } else {
+                    percent.innerText = Math.floor(
+                        (numberOfDone / numberOfTask) * 100
+                    );
+                    progressColor.style.width =
+                        (numberOfDone / numberOfTask) * 100 + "%";
+                }
+                percent.innerText += "%";
+            }
+
+            function filter(f) {
+                var containSelectedClass = document.querySelector(".selected");
+                containSelectedClass.classList.remove("selected");
+                var filter = document.getElementById(f);
+                filter.classList.add("selected");
+
+                var elementsWithUndone = document.querySelectorAll(".undone");
+                var elementsWithDone = document.querySelectorAll(".done");
+                if (f == "filter_all") {
+                    elementsWithUndone.forEach(function (element) {
+                        element.style.display = "flex";
+                    });
+                    elementsWithDone.forEach(function (element) {
+                        element.style.display = "flex";
+                    });
+                } else if (f == "filter_done") {
+                    elementsWithUndone.forEach(function (element) {
+                        element.style.display = "none";
+                    });
+                    elementsWithDone.forEach(function (element) {
+                        element.style.display = "flex";
+                    });
+                } else if (f == "filter_undone") {
+                    elementsWithUndone.forEach(function (element) {
+                        element.style.display = "flex";
+                    });
+                    elementsWithDone.forEach(function (element) {
+                        element.style.display = "none";
+                    });
+                }
+            }
+
+            function submitTask() {
+                var content = document.getElementById("taskText");
+                console.log(content.value);
+                var submittingTask = document.getElementById("tasks");
+                submittingTask.innerHTML +=
+                    '<div class="task undone" id="task' +
+                    n +
+                    '" style="width: 266px; height: 60px; border: 2px solid #555555; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center;"> <input type="checkbox" id="checkBox' +
+                    n +
+                    '" style="width: 20px; height: 20px; margin: 10px; cursor: pointer;" onclick="classChange(' +
+                    n +
+                    '); progress();"/> <div class="content" id="content' +
+                    n +
+                    '" style="width: 170px; height: 40px; display: flex; align-items: center;">' +
+                    content.value +
+                    '</div><span class="material-symbols-outlined" style="width: 40px; height: 40px; display:flex; justify-content:center; align-items:center" onclick="deleteTask(event); progress();">delete</span></div>';
+                content.value = "";
+                n++;
+            }
+
+            function deleteTask(event) {
+                var buttonElement = event.target;
+                var parentElement = buttonElement.parentNode;
+                var parentID = parentElement.id;
+                var deletingTask = document.getElementById(parentID);
+                deletingTask.remove();
+                n = n - 1;
+            }
+
+            function enter(event) {
+                if (event.keyCode === 13) {
+                    submitTask();
+                }
+            }
+
+            function fordate() {
+                var today = new Date();
+                var months = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec",
+                ];
+                var currentMonth = months[today.getMonth()];
+                var currentDay = today.getDate();
+                var day = document.getElementById("day");
+                var month = document.getElementById("month");
+                day.innerText = currentDay;
+                month.innerText = currentMonth;
+            }
+
+            function classChange(taskNumber) {
+                console.log("clicked!");
+                var checkBox = document.getElementById("checkBox" + taskNumber);
+                var taskDiv = document.getElementById("task" + taskNumber);
+
+                if (checkBox.checked) {
+                    taskDiv.classList.add("done");
+                    taskDiv.classList.remove("undone");
+                } else {
+                    taskDiv.classList.add("undone");
+                    taskDiv.classList.remove("done");
+                }
+            }
+
+            fordate();
+            progress();
+        </script>
+    </body>
+</html>
